@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mason — Construction & Masonry Portfolio</title>
+  <meta name="description" content="Mason Construction — Projects, clients, engineers, contractors. Interactive HTML replica of Mason Webflow template." />
+  <style>
+    /* ---------- Variables ---------- */
+    :root{
+      --bg:#f6f6f5;
+      --paper:#ffffff;
+      --muted:#7d7d7d;
+      --ink:#111111;
+      --accent:#f4a261; /* construction-sand */
+      --accent-dark:#d98d3f;
+      --card-shadow: 0 12px 30px rgba(12,12,12,0.08);
+      --radius:12px;
+      --maxw:1200px;
+      --ease:cubic-bezier(.2,.9,.2,1);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      -webkit-tap-highlight-color:transparent;
+      scroll-behavior: smooth;
+    }
+
+    /* ---------- Utility ---------- */
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    .row{display:flex;gap:20px;align-items:center}
+    .btn{
+      display:inline-block;padding:10px 18px;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;
+      border:0;cursor:pointer;transition:transform .18s var(--ease), box-shadow .18s var(--ease);
+      box-shadow: 0 6px 18px rgba(244,162,97,0.18);
+    }
+    .btn:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,0.12)}
+    a { color:inherit; text-decoration:none }
+    h1,h2,h3{margin:0}
+    p { margin:0 }
+
+    /* ---------- Header ---------- */
+    header{
+      position:sticky;top:0;z-index:60;background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.86));
+      backdrop-filter: blur(6px);border-bottom:1px solid rgba(15,15,15,0.04);
+    }
+    .site-nav{height:76px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{height:44px;width:auto}
+    .nav-links{display:flex;gap:20px;align-items:center;font-weight:600}
+    .nav-links a{padding:8px 10px;border-radius:8px;transition:background .15s,var(--ease)}
+    .nav-links a:hover{background:rgba(244,162,97,0.08);color:var(--accent-dark)}
+    .mobile-toggle{display:none}
+
+    /* ---------- Hero ---------- */
+    .hero{
+      min-height:86vh;
+      display:grid;align-items:center;
+      grid-template-columns:1fr 420px;gap:36px;padding:40px 0;
+      background: url('assets/hero-bg.jpg') center/cover no-repeat; /* -> Replace: assets/hero-bg.jpg (recommended 2000x1200) */
+      position:relative;color:#fff;
+    }
+    .hero::after{
+      content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,4,4,0.45), rgba(4,4,4,0.55));
+    }
+    .hero .container{position:relative;z-index:2}
+    .hero-left{max-width:760px;padding:40px 0}
+    .eyebrow{display:inline-block;background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:999px;margin-bottom:18px;font-weight:700}
+    .hero h1{font-size:46px;line-height:1.02;margin-bottom:12px;letter-spacing:-0.5px}
+    .lead{color:rgba(255,255,255,0.9);font-size:18px;margin-bottom:18px;max-width:620px}
+    .hero-ctas{display:flex;gap:12px;margin-top:8px}
+
+    .hero-card{
+      background:rgba(255,255,255,0.98);color:var(--ink);border-radius:14px;padding:18px;box-shadow:var(--card-shadow);
+    }
+    .hero-card img{width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:12px}
+    .stat-row{display:flex;gap:12px;margin-top:12px}
+    .stat{background:#fff;padding:10px;border-radius:10px;min-width:120px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+
+    /* ---------- Sections ---------- */
+    section{padding:72px 0}
+    .section-title{display:flex;flex-direction:column;gap:10px;align-items:flex-start;margin-bottom:18px}
+    .section-title h2{font-size:28px}
+    .muted{color:var(--muted)}
+
+    /* ---------- Services ---------- */
+    .services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .service{background:var(--paper);padding:22px;border-radius:12px;box-shadow:var(--card-shadow);transition:transform .22s var(--ease)}
+    .service:hover{transform:translateY(-8px)}
+    .service .icon{height:56px;width:56px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;margin-bottom:12px}
+
+    /* ---------- Projects (tabs) ---------- */
+    .tabs{display:flex;gap:12px;margin-bottom:20px}
+    .tab{padding:8px 14px;border-radius:999px;background:rgba(0,0,0,0.04);cursor:pointer;font-weight:700}
+    .tab.active{background:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(244,162,97,0.14)}
+    .project-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .project{
+      background:var(--paper);border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow);cursor:pointer;transition:transform .2s,var(--ease);
+      display:flex;flex-direction:column;
+    }
+    .project:hover{transform:translateY(-8px)}
+    .project img{width:100%;height:220px;object-fit:cover}
+    .project-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:8px}
+    .tag{display:inline-block;padding:6px 9px;border-radius:8px;background:rgba(0,0,0,0.06);font-weight:700;font-size:12px}
+
+    /* ---------- Modal / Lightbox ---------- */
+    .modal{position:fixed;inset:0;background:rgba(6,6,6,0.8);display:none;align-items:center;justify-content:center;z-index:200}
+    .lightbox{background:#fff;border-radius:12px;max-width:1000px;width:calc(100% - 40px);max-height:90vh;overflow:hidden;display:grid;grid-template-columns:1fr 360px;gap:18px;box-shadow:0 30px 80px rgba(0,0,0,0.5)}
+    .lb-slider{position:relative;background:#000;display:flex;align-items:center;justify-content:center}
+    .lb-slider img{max-width:100%;max-height:82vh;object-fit:contain;display:block}
+    .lb-thumbs{display:flex;flex-direction:column;gap:12px;padding:16px;overflow:auto}
+    .thumb{height:80px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .thumb.active{border-color:var(--accent)}
+    .close{position:absolute;top:12px;right:18px;background:rgba(255,255,255,0.95);border-radius:8px;padding:8px 10px;cursor:pointer;font-weight:800}
+    .lb-content{padding:18px;overflow:auto}
+
+    /* ---------- Testimonials ---------- */
+    .testi-row{display:flex;gap:12px;overflow:auto;padding-bottom:8px}
+    .testi{min-width:260px;background:var(--paper);padding:16px;border-radius:12px;box-shadow:var(--card-shadow)}
+
+    /* ---------- Contact ---------- */
+    .contact-grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
+    form .field{display:block;margin-bottom:12px}
+    input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #e7e7e7;font-size:15px}
+    textarea{min-height:140px;resize:vertical}
+
+    /* ---------- Footer ---------- */
+    footer{background:#121212;color:#ddd;padding:36px 0}
+    .footer-row{display:flex;justify-content:space-between;align-items:center;gap:18px}
+    footer a{color:#ddd}
+
+    /* ---------- Responsive ---------- */
+    @media (max-width:1100px){
+      .hero{grid-template-columns:1fr;min-height:72vh}
+      .project-grid{grid-template-columns:repeat(2,1fr)}
+      .lightbox{grid-template-columns:1fr 300px}
+    }
+    @media (max-width:720px){
+      header .container{padding:0 12px}
+      .nav-links{display:none}
+      .mobile-toggle{display:block}
+      .project-grid{grid-template-columns:1fr}
+      .services{grid-template-columns:1fr}
+      .contact-grid{grid-template-columns:1fr}
+      .lightbox{grid-template-columns:1fr}
+      .lb-thumbs{flex-direction:row;overflow:auto}
+      .thumb{height:64px;width:96px}
+    }
+
+    /* small helper for fade in animation on scroll */
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease), transform .7s var(--ease)}
+    .reveal.visible{opacity:1;transform:none}
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <div class="container site-nav">
+      <div class="brand">
+        <!-- Replace with your logo(s). Prefer SVG or transparent PNG -->
+        <img src="assets/logo.svg" alt="Mason Logo"> <!-- -> assets/logo.svg -->
+        <div style="line-height:1">
+          <div style="font-weight:800">Mason</div>
+          <small style="color:var(--muted)">Masonry • Construction • Consulting</small>
+        </div>
+      </div>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#projects">Projects</a>
+        <a href="#services">Services</a>
+        <a href="#team">Engineers</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="row" style="gap:12px">
+        <a href="#contact" class="btn">Get Quote</a>
+        <button class="mobile-toggle" aria-label="menu" onclick="toggleMobile()" style="display:none">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="container hero-left">
+      <div class="eyebrow">Trusted by contractors & engineers</div>
+      <h1>Building durable spaces with craft & engineering</h1>
+      <p class="lead">We specialise in masonry restoration, structural strengthening and new-build construction — working directly with homeowners, engineers and contractors.</p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn">View Projects</a>
+        <a href="#contact" class="btn" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.18)">Contact Us</a>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:22px">
+        <div class="hero-card" style="width:260px">
+          <!-- Replace with a featured project image -->
+          <img src="assets/hero-project.jpg" alt="Hero Project"> <!-- -> assets/hero-project.jpg (1200x800) -->
+          <div style="font-weight:700">Old Town Restoration</div>
+          <p class="muted" style="font-size:14px">Conservation of heritage brickwork and structural repair.</p>
+        </div>
+
+        <div class="hero-card" style="flex:1">
+          <div style="font-weight:700">Why choose us</div>
+          <p class="muted" style="margin-top:8px">Engineering-led approach, heritage experience, and a trusted network of contractors.</p>
+          <div class="stat-row" style="margin-top:10px">
+            <div class="stat">
+              <div style="font-weight:800;font-size:20px">15+</div>
+              <div style="color:var(--muted);font-size:13px;margin-top:4px">Years Experience</div>
+            </div>
+            <div class="stat">
+              <div style="font-weight:800;font-size:20px">120+</div>
+              <div style="color:var(--muted);font-size:13px;margin-top:4px">Projects</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Hero card -->
+    <div style="padding:22px">
+      <div class="hero-card reveal">
+        <!-- Replace with hero side image -->
+        <img src="assets/hero-side.jpg" alt="Feature project image"> <!-- -> assets/hero-side.jpg (800x600) -->
+        <div style="font-weight:800">Featured Project</div>
+        <p class="muted" style="margin-top:6px">Coastal home waterproofing & salt-proof mortar treatment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SERVICES ========== -->
+  <section id="services">
+    <div class="container">
+      <div class="section-title">
+        <h2>Our Core Services</h2>
+        <div class="muted">From restoration to large-scale construction — engineering-led and contractor-friendly.</div>
+      </div>
+
+      <div class="services">
+        <div class="service reveal">
+          <div class="icon">R</div>
+          <div style="font-weight:800;margin-bottom:8px">Restoration</div>
+          <div class="muted">Heritage brick/stone repair, repointing & conservation.</div>
+        </div>
+        <div class="service reveal">
+          <div class="icon">S</div>
+          <div style="font-weight:800;margin-bottom:8px">Structural Works</div>
+          <div class="muted">Strengthening, lintels, anchoring and load analysis.</div>
+        </div>
+        <div class="service reveal">
+          <div class="icon">N</div>
+          <div style="font-weight:800;margin-bottom:8px">New Build</div>
+          <div class="muted">Residential and commercial construction management.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PROJECTS (Completed / Ongoing tabs) ========== -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-title">
+        <h2>Projects</h2>
+        <div class="muted">Click any card to view large images and project details.</div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Projects filter">
+        <div class="tab active" data-filter="completed" onclick="switchTab(event)">Completed</div>
+        <div class="tab" data-filter="ongoing" onclick="switchTab(event)">Ongoing</div>
+        <div class="tab" data-filter="all" onclick="switchTab(event)">All</div>
+      </div>
+
+      <div class="project-grid" id="projectGrid">
+
+        <!-- Completed project 1 -->
+        <article class="project reveal" data-status="completed" onclick="openLightbox(0)">
+          <img src="assets/project-house1.jpg" alt="Luxury Villa"> <!-- -> assets/project-house1.jpg (800x600) -->
+          <div class="project-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:800">Luxury Villa</div>
+              <div class="tag">Completed</div>
+            </div>
+            <p class="muted">Stone façade, imported marble & structural retrofits — 2024.</p>
+          </div>
+        </article>
+
+        <!-- Completed project 2 -->
+        <article class="project reveal" data-status="completed" onclick="openLightbox(1)">
+          <img src="assets/project-office1.jpg" alt="Office Renovation"> <!-- -> assets/project-office1.jpg -->
+          <div class="project-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:800">Corporate Office Renovation</div>
+              <div class="tag">Completed</div>
+            </div>
+            <p class="muted">Open-plan office fitout with acoustic cladding.</p>
+          </div>
+        </article>
+
+        <!-- Completed project 3 -->
+        <article class="project reveal" data-status="completed" onclick="openLightbox(2)">
+          <img src="assets/project-bridge.jpg" alt="Bridge Expansion"> <!-- -> assets/project-bridge.jpg -->
+          <div class="project-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:800">City Bridge Expansion</div>
+              <div class="tag">Completed</div>
+            </div>
+            <p class="muted">Concrete reinforcement and guardrail upgrades.</p>
+          </div>
+        </article>
+
+        <!-- Ongoing project 1 -->
+        <article class="project reveal" data-status="ongoing" onclick="openLightbox(3)">
+          <img src="assets/project-apartment.jpg" alt="Apartment Complex"> <!-- -> assets/project-apartment.jpg -->
+          <div class="project-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:800">Green Apartment Complex</div>
+              <div class="tag">Ongoing</div>
+            </div>
+            <p class="muted">Sustainable materials & vertical gardens. ETA: Q2 2026.</p>
+          </div>
+        </article>
+
+        <!-- Ongoing project 2 -->
+        <article class="project reveal" data-status="ongoing" onclick="openLightbox(4)">
+          <img src="assets/project-hospital.jpg" alt="Hospital Expansion"> <!-- -> assets/project-hospital.jpg -->
+          <div class="project-body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:800">City Hospital Expansion</div>
+              <div class="tag">Ongoing</div>
+            </div>
+            <p class="muted">New ICU block & reinforced wards. ETA: Q1 2026.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== LIGHTBOX / PROJECT DETAIL (hidden by default) ========== -->
+  <div class="modal" id="lightbox">
+    <div class="lightbox" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+      <div class="lb-slider" id="lbSlider">
+        <button class="close" onclick="closeLightbox()">✕</button>
+        <button class="close" style="left:16px;right:auto" onclick="prevSlide()">‹</button>
+        <img id="lbImage" src="" alt="">
+        <button class="close" style="right:56px" onclick="nextSlide()">›</button>
+      </div>
+
+      <aside class="lb-thumbs">
+        <div style="font-weight:800;padding:6px 0" id="lbTitle">Project Title</div>
+        <div style="color:var(--muted);font-size:14px" id="lbDesc">Project description goes here.</div>
+
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" onclick="openInNewTab()">Open Image</button>
+          <button class="btn" onclick="shareProject()" style="background:#2d2d2d">Share</button>
+        </div>
+
+        <div style="margin-top:14px;font-weight:700">Gallery</div>
+        <div id="thumbsList" style="margin-top:10px;display:flex;flex-direction:column;gap:10px;overflow:auto"></div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ========== TEAM / CLIENTS ========== -->
+  <section id="team">
+    <div class="container">
+      <div class="section-title">
+        <h2>Engineers & Contractors</h2>
+        <div class="muted">Trusted partners and contractors we work with.</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+        <div class="project reveal">
+          <img src="assets/engineer1.jpg" alt="Engineer 1"> <!-- -> assets/engineer1.jpg -->
+          <div class="project-body">
+            <div style="font-weight:800">Eng. R. Kumar</div>
+            <div class="muted">Structural Engineer</div>
+          </div>
+        </div>
+
+        <div class="project reveal">
+          <img src="assets/contractor1.jpg" alt="Contractor 1"> <!-- -> assets/contractor1.jpg -->
+          <div class="project-body">
+            <div style="font-weight:800">ABC Contractors</div>
+            <div class="muted">General Contractor</div>
+          </div>
+        </div>
+
+        <div class="project reveal">
+          <img src="assets/engineer2.jpg" alt="Engineer 2"> <!-- -> assets/engineer2.jpg -->
+          <div class="project-body">
+            <div style="font-weight:800">Eng. S. Patel</div>
+            <div class="muted">Civil Consultant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TESTIMONIALS ========== -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="section-title">
+        <h2>Testimonials</h2>
+        <div class="muted">What clients & contractors say about our work.</div>
+      </div>
+
+      <div class="testi-row">
+        <div class="testi reveal">
+          <div style="font-weight:700">Mrs. R — Homeowner</div>
+          <div class="muted" style="margin-top:8px">"Exceptional workmanship — the restored facade looks brand new and will last."</div>
+        </div>
+        <div class="testi reveal">
+          <div style="font-weight:700">Structural Firm</div>
+          <div class="muted" style="margin-top:8px">"Detailed reports and clear coordination with our structural team."</div>
+        </div>
+        <div class="testi reveal">
+          <div style="font-weight:700">Contractor</div>
+          <div class="muted" style="margin-top:8px">"Competitive pricing and professional contracting partners. Recommended."</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT ========== -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-title">
+        <h2>Contact</h2>
+        <div class="muted">Request an inspection, quote or consultation.</div>
+      </div>
+
+      <div class="contact-grid">
+        <form onsubmit="event.preventDefault(); alert('Thanks! We received your message.');" class="reveal">
+          <div class="field"><input name="name" placeholder="Name" required></div>
+          <div class="field"><input name="email" type="email" placeholder="Email" required></div>
+          <div class="field"><input name="phone" placeholder="Phone"></div>
+          <div class="field"><textarea name="message" placeholder="Message"></textarea></div>
+          <div style="text-align:right"><button class="btn" type="submit">Send Message</button></div>
+        </form>
+
+        <aside class="hero-card reveal">
+          <div style="font-weight:800">Office</div>
+          <div class="muted" style="margin-top:6px">123 Mason Lane, Oldtown — Mon–Sat</div>
+          <div style="margin-top:16px">
+            <div style="font-weight:700">Quick Links</div>
+            <div style="margin-top:8px"><a href="#projects">Portfolio</a> · <a href="#services">Services</a></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="container footer-row">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="assets/logo-white.svg" alt="logo" style="height:36px"> <!-- -> assets/logo-white.svg -->
+        <div style="color:#aaa">© <span id="yr"></span> Mason Construction</div>
+      </div>
+      <div style="color:#bbb">Follow: <a href="#">Instagram</a> · <a href="#">LinkedIn</a></div>
+    </div>
+  </footer>
+
+  <!-- ========== SCRIPTS: INTERACTIONS, TABS, LIGHTBOX, ANIMATIONS ========== -->
+  <script>
+    // ---------- Replace with dynamic data if desired ----------
+    const projects = [
+      // Each project: title, desc, images[]
+      {
+        title: "Luxury Villa",
+        desc: "Stone façade, imported marble & structural retrofits — 2024.",
+        images: ["assets/project-house1.jpg","assets/project-house1-2.jpg","assets/project-house1-3.jpg"],
+        status: "completed"
+      },
+      {
+        title: "Corporate Office Renovation",
+        desc: "Open-plan office fitout with acoustic cladding.",
+        images: ["assets/project-office1.jpg","assets/project-office1-2.jpg"],
+        status: "completed"
+      },
+      {
+        title: "City Bridge Expansion",
+        desc: "Concrete reinforcement and guardrail upgrades.",
+        images: ["assets/project-bridge.jpg","assets/project-bridge-2.jpg"],
+        status: "completed"
+      },
+      {
+        title: "Green Apartment Complex",
+        desc: "Sustainable materials & vertical gardens. ETA: Q2 2026.",
+        images: ["assets/project-apartment.jpg","assets/project-apartment-2.jpg"],
+        status: "ongoing"
+      },
+      {
+        title: "City Hospital Expansion",
+        desc: "New ICU block & reinforced wards. ETA: Q1 2026.",
+        images: ["assets/project-hospital.jpg","assets/project-hospital-2.jpg"],
+        status: "ongoing"
+      }
+    ];
+
+    // ---------- Tabs (Completed / Ongoing / All) ----------
+    function switchTab(e){
+      const tabEls = document.querySelectorAll('.tab');
+      tabEls.forEach(t=>t.classList.remove('active'));
+      const t = e.currentTarget || e.target;
+      t.classList.add('active');
+      const filter = t.getAttribute('data-filter');
+      document.querySelectorAll('#projectGrid .project').forEach((p, i)=>{
+        const status = p.getAttribute('data-status');
+        if(filter === 'all' || filter === status){
+          p.style.display = '';
+        } else {
+          p.style.display = 'none';
+        }
+      });
+    }
+
+    // ---------- Lightbox (project modal + gallery) ----------
+    const lightbox = document.getElementById('lightbox');
+    const lbImage = document.getElementById('lbImage');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbDesc = document.getElementById('lbDesc');
+    const thumbsList = document.getElementById('thumbsList');
+
+    let currentProjectIndex = 0;
+    let currentSlide = 0;
+
+    // Build thumbnails in modal on open
+    function openLightbox(projectIndex){
+      currentProjectIndex = projectIndex;
+      const proj = projects[projectIndex];
+      if(!proj) return;
+      lbTitle.textContent = proj.title;
+      lbDesc.textContent = proj.desc;
+      currentSlide = 0;
+      updateLightboxImage();
+
+      // build thumbs
+      thumbsList.innerHTML = '';
+      proj.images.forEach((img, idx)=>{
+        const div = document.createElement('div');
+        div.className = 'thumb' + (idx===0 ? ' active' : '');
+        div.innerHTML = `<img src="${img}" alt="${proj.title} - ${idx+1}">`;
+        div.onclick = ()=>{
+          currentSlide = idx; updateLightboxImage();
+          document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
+          div.classList.add('active');
+        };
+        thumbsList.appendChild(div);
+      });
+
+      lightbox.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox(){
+      lightbox.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function updateLightboxImage(){
+      const proj = projects[currentProjectIndex];
+      if(!proj) return;
+      const src = proj.images[currentSlide] || proj.images[0];
+      lbImage.src = src;
+      // set active thumb
+      const thumbEls = document.querySelectorAll('.thumb');
+      thumbEls.forEach((t, i)=> t.classList.toggle('active', i===currentSlide));
+    }
+
+    function prevSlide(){
+      const proj = projects[currentProjectIndex];
+      if(!proj) return;
+      currentSlide = (currentSlide - 1 + proj.images.length) % proj.images.length;
+      updateLightboxImage();
+    }
+    function nextSlide(){
+      const proj = projects[currentProjectIndex];
+      if(!proj) return;
+      currentSlide = (currentSlide + 1) % proj.images.length;
+      updateLightboxImage();
+    }
+    function openInNewTab(){
+      const proj = projects[currentProjectIndex];
+      if(!proj) return;
+      const src = proj.images[currentSlide];
+      window.open(src, '_blank');
+    }
+    function shareProject(){
+      const proj = projects[currentProjectIndex];
+      if(!proj) return;
+      if(navigator.share){
+        navigator.share({title:proj.title,text:proj.desc,url:location.href});
+      } else {
+        alert('Sharing is supported on mobile devices or via secure browsers.');
+      }
+    }
+
+    // close lightbox when clicking outside content
+    lightbox.addEventListener('click', (e)=>{ if(e.target === lightbox) closeLightbox(); });
+
+    // ---------- Reveal on scroll ----------
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{
+        if(en.isIntersecting) en.target.classList.add('visible');
+      });
+    }, {threshold: .12});
+    reveals.forEach(r=>obs.observe(r));
+
+    // ---------- Fill current year ----------
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // ---------- Mobile nav toggle (basic) ----------
+    function toggleMobile(){
+      const nav = document.querySelector('.nav-links');
+      if(!nav) return;
+      nav.style.display = (nav.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    // ---------- Accessibility: keyboard navigation for lightbox ----------
+    window.addEventListener('keydown', (ev)=>{
+      if(lightbox.style.display === 'flex'){
+        if(ev.key === 'Escape') closeLightbox();
+        if(ev.key === 'ArrowLeft') prevSlide();
+        if(ev.key === 'ArrowRight') nextSlide();
+      }
+    });
+
+    // ---------- Ensure project images map to JS 'projects' data ----------
+    // This small sync ensures the initial grid images correspond to the `projects` array above.
+    (function syncGridWithData(){
+      const grid = document.getElementById('projectGrid');
+      const projectEls = Array.from(grid.querySelectorAll('.project'));
+      projectEls.forEach((el, idx)=>{
+        if(projects[idx]){
+          el.setAttribute('data-status', projects[idx].status);
+          // ensure img srcs match projects array (if you update projects array, update <img> tags accordingly)
+          el.querySelector('img').src = projects[idx].images[0];
+          el.querySelector('img').alt = projects[idx].title;
+        }
+      });
+    })();
+
+  </script>
+</body>
+</html>
